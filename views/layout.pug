@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title= "BackOffice Example"
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+  body
+    include partial/header.pug
+    div(class="container")
+      div#content
+        block content
+      include partial/footer.pug
+    script(src="/javascripts/articles.js")

@@ -131,9 +131,13 @@ app.use((req, res, next) => {
  * Routing
  */
 const pages = require("./routes/pages");
+const articles = require("./routes/articles");
 
 app.get("/", (req, res) => res.render("index"));
 app.use("/", pages);
+
+// Jeu de route propre à la gestion d'articles
+app.use("/articles", articles);
 
 // Handle 404
 app.use((req, res) => {

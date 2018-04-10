@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+    h3="Liste des articles"
+    each article in articles
+        div.item 
+            p.title=article.title
+            p.desc=article.description
+            p
+                a(href=`/articles/voir/${article.id}`) Voir l'article
+    a.btn.btn-primary(href="/articles/creer") Créer un nouvel article
+

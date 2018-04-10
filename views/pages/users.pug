@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+    h1.title="Page Users"
+    if prenoms.length > 2
+        p="Awesome!"
+    ul
+    each prenom in prenoms
+        li= prenom
+    ul
+    each user in users
+        li= user.name
+   

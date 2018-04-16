@@ -10,7 +10,11 @@ const Articles = (sequelize, DataTypes) => {
       // fields
       title: { type: DataTypes.STRING, unique: "theTitle", notEmpty: true },
       photo: { type: DataTypes.STRING },
-      description: { type: DataTypes.TEXT, is: ["^[a-z]{10,}$", "i"] },
+      description: {
+        type: DataTypes.TEXT,
+        is: ["^[a-z]{10,}$", "i"],
+        notEmpty: true
+      },
       active: { type: DataTypes.INTEGER },
       datePublication: { type: DataTypes.DATE, isDate: true },
       note: { type: DataTypes.INTEGER, isInt: true, min: 1, max: 5 }

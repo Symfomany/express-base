@@ -6,6 +6,7 @@ block content
         div.item 
             p.title=article.title
             p.desc=article.description
+            img(src=`/uploads/${article.photo}`)
             p
                 a(href=`/articles/voir/${article.id}`) Voir l'article
     a.btn.btn-primary(href="/articles/creer") Créer un nouvel article

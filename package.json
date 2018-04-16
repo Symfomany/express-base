@@ -25,7 +25,8 @@
     "passport-local": "^1.0.0",
     "pug": "^2.0.3",
     "req-flash": "0.0.3",
-    "sequelize": "^4.37.4"
+    "sequelize": "^4.37.4",
+    "validator": "^9.4.1"
   },
   "devDependencies": {}
 }

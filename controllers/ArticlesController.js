@@ -1,4 +1,6 @@
 const db = require(`../models/index.js`);
+const validator = require("validator");
+
 /**
  * Class Articles Controller
  */
@@ -23,11 +25,18 @@ class ArticlesController {
   }
 
   enregistrer(req, res) {
-    // récupérer mes données en POST
-    console.log(req.body);
-    db.Articles.create(req.body).then(article =>
-      res.redirect("/articles/liste")
-    );
+    const monFichier = req.files.photo;
+
+    monFichier.mv(`public/uploads/${monFichier.name}`, () => {
+      // récupérer mes données en POST
+
+      let datas = req.body;
+      datas.photo = monFichier.name;
+
+      db.Articles.create(datas).then(article =>
+        res.redirect("/articles/liste")
+      );
+    });
   }
 
   voir(req, res) {

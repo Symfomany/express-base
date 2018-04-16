@@ -21,6 +21,7 @@ const Articles = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
+      tableName: "articles",
       getterMethods: {
         dateFr() {
           function pad(s) {

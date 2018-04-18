@@ -22,8 +22,8 @@ const bcrypt = require("bcrypt-nodejs");
 const colors = require("colors/safe");
 const db = require(`./models/index.js`);
 const loggedIn = require("./middlewares/logged");
-const flash = require("req-flash");
 const fileUpload = require("express-fileupload");
+const flash = require("express-flash");
 
 app.use(express.static(__dirname + "/public")); // all statics files in /public
 app.set("views", path.join(__dirname, "views"));
@@ -50,7 +50,6 @@ app.use(
     cookie: { maxAge: 100 * 60 * 60 * 24 * 30 } // lifetime of cookie = 30 days
   })
 );
-app.use(flash());
 
 passport.use(
   new LocalStrategy(
@@ -132,12 +131,14 @@ app.use((req, res, next) => {
  */
 const pages = require("./routes/pages");
 const articles = require("./routes/articles");
+const categories = require("./routes/categories");
 
 app.get("/", (req, res) => res.render("index"));
 app.use("/", pages);
 
 // Jeu de route propre à la gestion d'articles
 app.use("/articles", articles);
+app.use("/categories", categories);
 
 // Handle 404
 app.use((req, res) => {
@@ -155,6 +156,8 @@ app.use((error, req, res, next) => {
     error: error
   });
 });
+
+app.use(flash());
 
 /*********************************************************************************************************************************************
  * *************************************************************************

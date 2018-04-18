@@ -3,7 +3,7 @@ extends ../layout
 block content
 
     h3="Créer un nouvel article"
-    form(method="POST", action="/articles/enregistrer", enctype="multipart/form-data")
+    form(method="POST", action="/articles/enregistrer",name="form", enctype="multipart/form-data")
         input(class="form-control",  name="title", placeholder="Le Titre")
         textarea(class="form-control", name="description", placeholder="La Description")
         input(type="file", name="photo", accept="image/*", capture="capture")

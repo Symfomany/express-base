@@ -1,5 +1,8 @@
 const db = require(`../models/index.js`);
 const validator = require("validator");
+let form = require("express-form"),
+  filter = form.filter,
+  validate = form.validate;
 
 /**
  * Class Articles Controller
@@ -25,12 +28,10 @@ class ArticlesController {
   }
 
   enregistrer(req, res) {
+    let datas = req.body;
+
     const monFichier = req.files.photo;
-
     monFichier.mv(`public/uploads/${monFichier.name}`, () => {
-      // récupérer mes données en POST
-
-      let datas = req.body;
       datas.photo = monFichier.name;
 
       db.Articles.create(datas).then(article =>

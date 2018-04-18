@@ -17,6 +17,8 @@
     "debug": "^3.1.0",
     "express": "^4.16.3",
     "express-fileupload": "^0.4.0",
+    "express-flash": "0.0.2",
+    "express-form": "^0.12.6",
     "express-session": "^1.15.6",
     "morgan": "^1.9.0",
     "mysql2": "^1.5.3",

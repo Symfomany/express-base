@@ -1,0 +1,26 @@
+extends ../layout
+
+block css
+    link(rel="stylesheet", href="/stylesheets/creer.css")
+
+block append javascripts
+    script(src="/javascripts/creer.js")
+
+block content
+    form(action=`/categories/modifier/${category.id}`, method="POST")
+        input(class="form-control",name="titre", placeholder="Votre titre", required, value=category.titre)
+        textarea(class="form-control",name="description", placeholder="Votre description", required)=category.description
+        input(type="radio",name="sexe",value="homme") 
+        label="Homme"
+        input(type="radio",name="sexe",value="femme") 
+        label="Femme"
+        input(type="checkbox",name="sports[]",value="rugby") 
+        label="Rugby"
+         input(type="checkbox",name="sports[]",value="boxe") 
+        label="Boxe"
+         input(type="checkbox",name="sports[]",value="hand") 
+        label="Hand"
+
+
+
+        button(type="submit") Modifier cette catégorie 

@@ -16,8 +16,10 @@ const bodyParser = require("body-parser"); // Module for POST/GET datas
 const cookieParser = require("cookie-parser"); // Module for cookie in Session
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
+
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+
 const bcrypt = require("bcrypt-nodejs");
 const colors = require("colors/safe");
 const db = require(`./models/index.js`);
@@ -51,38 +53,75 @@ app.use(
   })
 );
 
+// passport.use(
+//   new LocalStrategy(
+//     {
+//       // configuration  de votre formulaire login
+//       // avec les noms des champs du formulaire
+//       usernameField: "email",
+//       passwordField: "password",
+//       passReqToCallback: true // allows us to pass back the entire request to the callback
+//     },
+//     (req, email, password, done) => {
+//       const generateHash = password =>
+//         bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+
+//       const hashPassword = generateHash(password);
+//       db.Users.findOne({
+//         where: {
+//           email: email
+//         }
+//       })
+//         .then(user => {
+//           if (!user) {
+//             return done(null, false, { message: "password invalid..." });
+//           } else {
+//             bcrypt.compare(password, user.password, (err, res) => {
+//               if (res === false) {
+//                 return done(null, false, { message: "password invalid..." });
+//               }
+//             });
+//           }
+//           return done(null, user);
+//         })
+//         .catch(err => {
+//           return done(err, false);
+//         });
+//     }
+//   )
+// );
+
+// Middleware dans Passport
+// LocalStrategy, c'est la stratégie locale mis en place
+// par nos mains.
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "email",
+      usernameField: "email", // nom des champs de mon formulaire
       passwordField: "password",
       passReqToCallback: true // allows us to pass back the entire request to the callback
     },
-    (req, email, password, done) => {
-      const generateHash = password =>
-        bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+    (req, email, password, next) => {
+      // Notre Middleware qui va être la stratégie locale d'authentification
+      console.log(email, password);
 
-      const hashPassword = generateHash(password);
-      db.Users.findOne({
-        where: {
-          email: email
-        }
-      })
-        .then(user => {
-          if (!user) {
-            return done(null, false, { message: "password invalid..." });
-          } else {
-            bcrypt.compare(password, user.password, (err, res) => {
-              if (res === false) {
-                return done(null, false, { message: "password invalid..." });
-              }
-            });
-          }
-          return done(null, user);
-        })
-        .catch(err => {
-          return done(err, false);
-        });
+      // next() prend 3 paramètres:
+      // 1: erreur de requête
+      // 2: un utilisateur récupérer depuis une base de données
+      // 3: options conrenant le message flash
+      if (email !== "julien.boyer@wildcodeschool.fr") {
+        return next(null, false, { message: "Mauvais Email" });
+      }
+
+      if (password !== "azerty") {
+        return next(null, false, { message: "Mauvais Mot de passe" });
+      }
+
+      let user = {
+        id: 1,
+        email: "julien.boyer@wildcodeschool.fr"
+      };
+      return next(null, user);
     }
   )
 );
@@ -108,6 +147,7 @@ passport.deserializeUser((id, done) => {
 // Initialize Passport Module
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 /**
  * Store in global variables
@@ -125,16 +165,32 @@ app.use((req, res, next) => {
  * *************************************************************************
  * *************************************************************************
  ******************************************************************************************************************************************/
+/**
+ * Middleware
+ */
+
+app.use("/articles/liste", (req, res, next) => {
+  console.log("Liste de mes articles");
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log("Time:", Date.now());
+  next();
+});
 
 /**
  * Routing
  */
+
 const pages = require("./routes/pages");
 const articles = require("./routes/articles");
 const categories = require("./routes/categories");
+const auth = require("./routes/auth");
 
 app.get("/", (req, res) => res.render("index"));
 app.use("/", pages);
+app.use("/auth", auth);
 
 // Jeu de route propre à la gestion d'articles
 app.use("/articles", articles);
@@ -156,8 +212,6 @@ app.use((error, req, res, next) => {
     error: error
   });
 });
-
-app.use(flash());
 
 /*********************************************************************************************************************************************
  * *************************************************************************

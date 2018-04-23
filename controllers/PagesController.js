@@ -12,6 +12,11 @@ class PagesController {
     res.render("pages/about");
   }
 
+  private(req, res) {
+    const user = req.user;
+    res.render("pages/private", { user, message: req.flash("error") });
+  }
+
   /**
    * Page Concept
    * @param {*} req

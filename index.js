@@ -112,12 +112,17 @@ passport.use(
       db.Users.findOne({ where: { email: email } }).then(user => {
         if (!user) {
           return next(null, false, { message: "Mauvais Email" });
-        } else if (password !== user.password) {
-          return next(null, false, { message: "Mauvais Mot de passe" });
-        } else if (user.active === 0) {
+        }
+        if (user.active === 0) {
           return next(null, false, { message: "Votre compte est désactivé" });
         }
-        return next(null, user);
+        bcrypt.compare(password, user.password, (err, resultat) => {
+          if (resultat === false) {
+            return next(null, false, { message: "Mauvais Mot de passe" });
+          } else {
+            return next(null, user);
+          }
+        });
       });
     }
   )

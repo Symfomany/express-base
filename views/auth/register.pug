@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+    h3="Création de compte"
+    if message && message.length > 0
+        p.alert.alert-danger=message
+    form(action="/auth/register", method="POST")
+        input(class="form-control", name="name", type="texy", placeholder="Votre nom", required)
+        input(class="form-control", name="email", type="email", placeholder="Votre email", required)
+        input(class="form-control", name="password", type="password", placeholder="Votre mot de passe", required)
+        input(class="form-control", id="actif", name="active", for='actif', type="checkbox", value="1") 
+        span=`Actif?`
+        button(type="submit") Créer son compte

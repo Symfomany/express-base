@@ -103,25 +103,22 @@ passport.use(
     },
     (req, email, password, next) => {
       // Notre Middleware qui va être la stratégie locale d'authentification
-      console.log(email, password);
 
       // next() prend 3 paramètres:
       // 1: erreur de requête
       // 2: un utilisateur récupérer depuis une base de données
       // 3: options conrenant le message flash
-      if (email !== "julien.boyer@wildcodeschool.fr") {
-        return next(null, false, { message: "Mauvais Email" });
-      }
 
-      if (password !== "azerty") {
-        return next(null, false, { message: "Mauvais Mot de passe" });
-      }
-
-      let user = {
-        id: 1,
-        email: "julien.boyer@wildcodeschool.fr"
-      };
-      return next(null, user);
+      db.Users.findOne({ where: { email: email } }).then(user => {
+        if (!user) {
+          return next(null, false, { message: "Mauvais Email" });
+        } else if (password !== user.password) {
+          return next(null, false, { message: "Mauvais Mot de passe" });
+        } else if (user.active === 0) {
+          return next(null, false, { message: "Votre compte est désactivé" });
+        }
+        return next(null, user);
+      });
     }
   )
 );
@@ -148,6 +145,19 @@ passport.deserializeUser((id, done) => {
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+/**
+ * For APIs
+ */
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+  next();
+});
 
 /**
  * Store in global variables
@@ -177,6 +187,18 @@ app.use("/articles/liste", (req, res, next) => {
 app.use((req, res, next) => {
   console.log("Time:", Date.now());
   next();
+});
+
+/**
+ * Controller le paramètre id afin de vérifier si c'est un nombre
+ */
+app.use("/articles/voir/:id", (req, res, next) => {
+  const id = req.params.id;
+  if (isNaN(id)) {
+    return res.redirect("/articles/liste");
+  } else {
+    next();
+  }
 });
 
 /**

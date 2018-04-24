@@ -10,6 +10,7 @@ const controller = new AuthController();
 
 // route listant les articles
 router.get("/login", (req, res) => controller.login(req, res));
+router.get("/logout", (req, res) => controller.logout(req, res));
 
 router.post(
   "/login",

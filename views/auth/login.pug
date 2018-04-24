@@ -2,7 +2,7 @@ extends ../layout
 
 block content
     h3="Authentification"
-    if message.length > 0
+    if message && message.length > 0
         p.alert.alert-danger=message
     form(action="/auth/login", method="POST")
         input(class="form-control", name="email", type="email", placeholder="Votre email", required)

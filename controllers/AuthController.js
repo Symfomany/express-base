@@ -5,10 +5,11 @@ const db = require(`../models/index.js`);
  */
 class AuthController {
   login(req, res) {
+    // req.flash("error") : permet de récupérer le message flash par sa clef: error
     res.render("auth/login", { message: req.flash("error") });
   }
   logout(req, res) {
-    req.logout();
+    req.logout(); // suppresion de la session en cours
     res.redirect("/auth/login");
   }
 }

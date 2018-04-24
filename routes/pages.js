@@ -17,6 +17,7 @@ router.get("/users", isAnonymous, (req, res) => controller.users(req, res));
  */
 function loggedIn(req, res, next) {
   if (req.user) {
+    // si l'utilisateur est connecté
     // if request contains the user
     next(); // call next
   } else {

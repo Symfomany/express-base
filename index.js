@@ -17,9 +17,6 @@ const cookieParser = require("cookie-parser"); // Module for cookie in Session
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
 
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-
 const bcrypt = require("bcrypt-nodejs");
 const colors = require("colors/safe");
 const db = require(`./models/index.js`);
@@ -53,9 +50,7 @@ app.use(
   })
 );
 
-// Initialize Passport Module
-app.use(passport.initialize());
-app.use(passport.session());
+// Initialize Flash
 app.use(flash());
 
 /**

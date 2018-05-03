@@ -8,9 +8,6 @@ const PagesController = require("../controllers/PagesController");
 const controller = new PagesController();
 
 router.get("/about", (req, res) => controller.about(req, res));
-router.get("/concept", (req, res) => controller.concept(req, res));
-router.get("/contact", (req, res) => controller.contact(req, res));
-router.get("/users", isAnonymous, (req, res) => controller.users(req, res));
 
 /**
  * Middleware vérifier si je suis connecté

@@ -53,99 +53,6 @@ app.use(
   })
 );
 
-// passport.use(
-//   new LocalStrategy(
-//     {
-//       // configuration  de votre formulaire login
-//       // avec les noms des champs du formulaire
-//       usernameField: "email",
-//       passwordField: "password",
-//       passReqToCallback: true // allows us to pass back the entire request to the callback
-//     },
-//     (req, email, password, done) => {
-//       const generateHash = password =>
-//         bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
-
-//       const hashPassword = generateHash(password);
-//       db.Users.findOne({
-//         where: {
-//           email: email
-//         }
-//       })
-//         .then(user => {
-//           if (!user) {
-//             return done(null, false, { message: "password invalid..." });
-//           } else {
-//             bcrypt.compare(password, user.password, (err, res) => {
-//               if (res === false) {
-//                 return done(null, false, { message: "password invalid..." });
-//               }
-//             });
-//           }
-//           return done(null, user);
-//         })
-//         .catch(err => {
-//           return done(err, false);
-//         });
-//     }
-//   )
-// );
-
-// Middleware dans Passport
-// LocalStrategy, c'est la stratégie locale mis en place
-// par nos mains.
-passport.use(
-  new LocalStrategy(
-    {
-      usernameField: "email", // nom des champs de mon formulaire
-      passwordField: "password",
-      passReqToCallback: true // allows us to pass back the entire request to the callback
-    },
-    (req, email, password, next) => {
-      // Notre Middleware qui va être la stratégie locale d'authentification
-
-      // next() prend 3 paramètres:
-      // 1: erreur de requête
-      // 2: un utilisateur récupérer depuis une base de données
-      // 3: options conrenant le message flash
-
-      db.Users.findOne({ where: { email: email } }).then(user => {
-        if (!user) {
-          return next(null, false, { message: "Mauvais Email" });
-        }
-        if (user.active === 0) {
-          return next(null, false, { message: "Votre compte est désactivé" });
-        }
-        bcrypt.compare(password, user.password, (err, resultat) => {
-          if (resultat === false) {
-            return next(null, false, { message: "Mauvais Mot de passe" });
-          } else {
-            return next(null, user);
-          }
-        });
-      });
-    }
-  )
-);
-
-// Serialize and Unserialize an User
-passport.serializeUser((user, done) => done(null, user.id));
-// saved to session req.session.passport.user = {id:'..'}
-passport.deserializeUser((id, done) => {
-  db.Users.findOne({
-    // Using sequelize model functoin
-    where: {
-      id: id
-    }
-  }).then(user => {
-    if (user == null) {
-      done(new Error("Wrong user id."));
-    }
-    done(null, user); // Standerd deserailize callback
-  });
-});
-// user object attaches to the request as req.user
-
 // Initialize Passport Module
 app.use(passport.initialize());
 app.use(passport.session());
@@ -184,46 +91,18 @@ app.use((req, res, next) => {
  * Middleware
  */
 
-app.use("/articles/liste", (req, res, next) => {
-  console.log("Liste de mes articles");
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("Time:", Date.now());
-  next();
-});
-
-/**
- * Controller le paramètre id afin de vérifier si c'est un nombre
- */
-app.use("/articles/voir/:id", (req, res, next) => {
-  const id = req.params.id;
-  if (isNaN(id)) {
-    return res.redirect("/articles/liste");
-  } else {
-    next();
-  }
-});
-
 /**
  * Routing
  */
 
 const pages = require("./routes/pages");
-const articles = require("./routes/articles");
-const categories = require("./routes/categories");
-const auth = require("./routes/auth");
 
 app.get("/", (req, res) => res.render("index"));
 app.use("/", pages);
-app.use("/auth", auth);
 
-// Jeu de route propre à la gestion d'articles
-app.use("/articles", articles);
-app.use("/categories", categories);
-
-// Handle 404
+/**
+ * 404 Page
+ */
 app.use((req, res) => {
   res.status(404);
   res.render("errors/404");

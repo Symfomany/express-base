@@ -1,0 +1,7 @@
+extends ../layout
+
+block content
+    form(method="POST", action="/store")
+        input(name="nom", type="text", placeholder="Votre nom de tâche", required)
+        textarea(name="description", placeholder="Petite description de tâche", required)
+        button(type="submit") Enregistrer la tâche

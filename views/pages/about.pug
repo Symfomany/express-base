@@ -1,4 +1,10 @@
 extends ../layout
 
 block content
-    h1="Page About"
+    a(href="") Page About
+    ul
+    each todo in todos
+        h3.title=todo.nom
+        p.txt=todo.description
+        a(href=`/see/${todo.id}` alt="") Voir l'article
+    a(href="/add") Ajouter une Todo

@@ -9,7 +9,27 @@ class PagesController {
    * @param {*} res
    */
   about(req, res) {
-    res.render("pages/about");
+    db.Todo.findAll().then(todos => {
+      res.render("pages/about", {
+        todos: todos
+      });
+    });
+  }
+
+  see(req, res) {
+    db.Todo.findById(req.params.id).then(todo => {
+      res.render("pages/see", {
+        todo: todo
+      });
+    });
+  }
+
+  add(req, res) {
+    res.render("pages/add");
+  }
+
+  store(req, res) {
+    db.Todo.create(req.body).then(() => res.redirect("/about"));
   }
 }
 

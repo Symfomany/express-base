@@ -8,6 +8,9 @@ const PagesController = require("../controllers/PagesController");
 const controller = new PagesController();
 
 router.get("/about", (req, res) => controller.about(req, res));
+router.get("/see/:id", (req, res) => controller.see(req, res));
+router.get("/add", (req, res) => controller.add(req, res));
+router.post("/store", (req, res) => controller.store(req, res));
 
 /**
  * Middleware vérifier si je suis connecté
